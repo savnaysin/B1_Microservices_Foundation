@@ -1,8 +1,10 @@
 package b7.savsi.foundation.bank.savsi_bank.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -12,9 +14,11 @@ public class Account {
 	@GeneratedValue
 	private Integer accountID;
 	private String accountType;
-	@OneToOne
+
+	@OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "customerId", referencedColumnName = "customerId")
 	private Customer customer;
-	private double balance;
+	private Long balance;
 
 	public Account() {
 		super();
@@ -37,11 +41,11 @@ public class Account {
 		this.accountType = accountType;
 	}
 
-	public double getBalance() {
+	public Long getBalance() {
 		return balance;
 	}
 
-	public void setBalance(double balance) {
+	public void setBalance(Long balance) {
 		this.balance = balance;
 	}
 

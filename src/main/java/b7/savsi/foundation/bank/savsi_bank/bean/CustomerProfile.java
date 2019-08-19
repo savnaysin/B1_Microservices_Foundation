@@ -4,15 +4,14 @@ public class CustomerProfile {
 
 	private Integer accountID;
 	private String accountType;
-	private double accountBalance;
+	private Long accountBalance;
 	private Integer customerId;
 	private String customerName;
 	private String customerPhone;
-	private double depositAmount;
-	private double withdrawalAmount;
 
-	public CustomerProfile(Integer accountID, String accountType, double accountBalance, Integer customerId,
-			String customerName, String customerPhone, double depositAmount, double withdrawalAmount) {
+
+	public CustomerProfile(Integer accountID, String accountType, Long accountBalance, Integer customerId,
+			String customerName, String customerPhone) {
 		super();
 		this.accountID = accountID;
 		this.accountType = accountType;
@@ -20,8 +19,6 @@ public class CustomerProfile {
 		this.customerId = customerId;
 		this.customerName = customerName;
 		this.customerPhone = customerPhone;
-		this.depositAmount = depositAmount;
-		this.withdrawalAmount = withdrawalAmount;
 	}
 
 	public CustomerProfile() {
@@ -33,7 +30,7 @@ public class CustomerProfile {
 	public String toString() {
 		return "CustomerProfile [accountID=" + accountID + ", accountType=" + accountType + ", accountBalance="
 				+ accountBalance + ", customerId=" + customerId + ", customerName=" + customerName + ", customerPhone="
-				+ customerPhone + ", depositAmount=" + depositAmount + ", withdrawalAmount=" + withdrawalAmount + "]";
+				+ customerPhone + "]";
 	}
 
 	public Integer getAccountID() {
@@ -52,11 +49,11 @@ public class CustomerProfile {
 		this.accountType = accountType;
 	}
 
-	public double getAccountBalance() {
+	public Long getAccountBalance() {
 		return accountBalance;
 	}
 
-	public void setAccountBalance(double accountBalance) {
+	public void setAccountBalance(Long accountBalance) {
 		this.accountBalance = accountBalance;
 	}
 
@@ -84,20 +81,5 @@ public class CustomerProfile {
 		this.customerPhone = customerPhone;
 	}
 
-	public double getDepositAmount() {
-		return depositAmount;
-	}
-
-	public void setDepositAmount(double depositAmount) {
-		this.depositAmount = depositAmount;
-	}
-
-	public double getWithdrawalAmount() {
-		return withdrawalAmount;
-	}
-
-	public void setWithdrawalAmount(double withdrawalAmount) {
-		this.withdrawalAmount = withdrawalAmount;
-	}
-
+	
 }

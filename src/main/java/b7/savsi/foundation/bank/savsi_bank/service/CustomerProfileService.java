@@ -7,6 +7,7 @@ import b7.savsi.foundation.bank.savsi_bank.bean.CustomerProfile;
 import b7.savsi.foundation.bank.savsi_bank.dao.AccountDao;
 import b7.savsi.foundation.bank.savsi_bank.dao.CustomerDao;
 import b7.savsi.foundation.bank.savsi_bank.entity.Account;
+import b7.savsi.foundation.bank.savsi_bank.entity.Customer;
 
 @Service
 public class CustomerProfileService {
@@ -30,6 +31,18 @@ public class CustomerProfileService {
 			return customerProfile;
 		}
 		return null;
+	}
+
+	public Account createAccount(CustomerProfile customerProfile) {
+		Account newAccount= new Account();
+		Customer newCustomer= new Customer();
+		newCustomer.setName(customerProfile.getCustomerName());
+		newCustomer.setPhone(customerProfile.getCustomerPhone());
+		newAccount.setAccountType(customerProfile.getAccountType());
+		newAccount.setCustomer(newCustomer);
+		Account savedAccount=accountDao.save(newAccount);
+		return savedAccount;
+		
 	}
 
 }
