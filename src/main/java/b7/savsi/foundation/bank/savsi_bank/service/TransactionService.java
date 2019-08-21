@@ -22,13 +22,14 @@ public class TransactionService {
 
 	@Transactional
 	public TransactionResponse transferFunds(TransactionRequest transactionRequest) {
-		Account sourceAccount = accountDao.findByAccountID(transactionRequest.getDepositAccountId());
-		Account destinationAccount = accountDao.findByAccountID(transactionRequest.getWithdrawalAccountId());
+		Account sourceAccount = accountDao.findByAccountID(transactionRequest.getWithdrawalAccountId());
+		Account destinationAccount = accountDao.findByAccountID(transactionRequest.getDepositAccountId());
 		Long amount = transactionRequest.getTransactionamount();
 		Integer sourceActId = transactionRequest.getWithdrawalAccountId();
 		Integer destActId = transactionRequest.getDepositAccountId();
-		TransactionResponse transactionResponse = new TransactionResponse(sourceActId, destActId, null, null, "", "");
-
+		TransactionResponse transactionResponse = new TransactionResponse();
+		transactionResponse.setSourceAccountId(sourceActId);
+		transactionResponse.setDestinationAccountId(destActId);
 		if (sourceAccount == null) {
 			transactionResponse.setTransactionStatus("FAILED");
 			transactionResponse.setMessage("SOURCE ACCOUNT NOT FOUND");
@@ -44,15 +45,18 @@ public class TransactionService {
 			transactionResponse.setMessage("INSUFFICIENT FUNDS IN SOURCE ACCOUNT");
 			return transactionResponse;
 		}
+		if (sourceAccount != null && destinationAccount != null)
+		{
 		destinationAccount.setBalance(destinationAccount.getBalance() + amount);
 		sourceAccount.setBalance(sourceAccount.getBalance() - amount);
-		accountDao.save(sourceAccount);
-		accountDao.save(destinationAccount);
-
-		transactionResponse.setSourceBalance(sourceAccount.getBalance());
-		transactionResponse.setDestinationBalance(destinationAccount.getBalance());
+		System.out.println(accountDao.save(sourceAccount).getBalance());
+		transactionResponse.setSourceBalance(accountDao.save(sourceAccount).getBalance());
+		transactionResponse.setDestinationBalance(accountDao.save(destinationAccount).getBalance());
 		transactionResponse.setTransactionStatus("SUCCESS");
 		transactionResponse.setMessage("FUNDS TRANSFERRED");
+		}		
+		
+		System.out.println("$$$$$$$$$$$$$$$$$$");
 		return transactionResponse;
 
 	}

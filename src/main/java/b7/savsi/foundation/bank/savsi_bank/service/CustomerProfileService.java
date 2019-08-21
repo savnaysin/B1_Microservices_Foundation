@@ -23,7 +23,6 @@ public class CustomerProfileService {
 		if (!(accountFound == null)) {
 			customerProfile.setAccountID(accountFound.getAccountID());
 			customerProfile.setAccountType(accountFound.getAccountType());
-			customerProfile.setAccountType(accountFound.getAccountType());
 			customerProfile.setCustomerId(accountFound.getCustomer().getCustomerId());
 			customerProfile.setCustomerName(accountFound.getCustomer().getName());
 			customerProfile.setCustomerPhone(accountFound.getCustomer().getPhone());
@@ -33,16 +32,26 @@ public class CustomerProfileService {
 		return null;
 	}
 
-	public Account createAccount(CustomerProfile customerProfile) {
-		Account newAccount= new Account();
-		Customer newCustomer= new Customer();
-		newCustomer.setName(customerProfile.getCustomerName());
-		newCustomer.setPhone(customerProfile.getCustomerPhone());
-		newAccount.setAccountType(customerProfile.getAccountType());
-		newAccount.setCustomer(newCustomer);
-		Account savedAccount=accountDao.save(newAccount);
-		return savedAccount;
-		
+	public void createAccount(CustomerProfile customerProfile) {
+		Account newAccount = new Account(customerProfile.getAccountType(),
+				new Customer(customerProfile.getCustomerName(), customerProfile.getCustomerPhone()),
+				customerProfile.getAccountBalance());
+		accountDao.save(newAccount);
+	}
+
+	public CustomerProfile getCustomerdetailsById(Integer customerId) {
+		Customer customerFound = customerDao.findByCustomerId(customerId);
+		CustomerProfile customerProfile = new CustomerProfile();
+		if (!(customerFound == null)) {
+			customerProfile.setCustomerId(customerFound.getCustomerId());
+			customerProfile.setCustomerName(customerFound.getName());
+			customerProfile.setCustomerPhone(customerFound.getPhone());
+			customerProfile.setAccountID(customerFound.getAccount().getAccountID());
+			customerProfile.setAccountType(customerFound.getAccount().getAccountType());
+			customerProfile.setAccountBalance(customerFound.getAccount().getBalance());
+			return customerProfile;
+		}
+		return null;
 	}
 
 }

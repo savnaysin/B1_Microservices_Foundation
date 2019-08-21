@@ -11,4 +11,6 @@ import b7.savsi.foundation.bank.savsi_bank.entity.Customer;
 @Repository
 public interface CustomerDao extends JpaRepository<Customer, Integer> {
 
+	Customer findByCustomerId(Integer customerId);
+
 }

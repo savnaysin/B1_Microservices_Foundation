@@ -1,15 +1,21 @@
 package b7.savsi.foundation.bank.savsi_bank.bean;
 
-public class TransactionResponse {
+import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+public class TransactionResponse implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	private Integer sourceAccountId;
 	private Integer destinationAccountId;
+
+	@JsonIgnore
 	private Long sourceBalance;
+	@JsonIgnore
 	private Long destinationBalance;
 	private String transactionStatus;
 	private String message;
-
-	
 
 	public TransactionResponse(Integer sourceAccountId, Integer destinationAccountId, Long sourceBalance,
 			Long destinationBalance, String transactionStatus, String message) {

@@ -22,22 +22,21 @@ public class CustomerAccountTrackerController {
 	@Autowired
 	TransactionService TransactionService;
 
-	// CreateNewAccount POST
 	@PostMapping(path = "/createNewAccount", consumes = "application/json", produces = "application/json")
-	public Account createNewAccount(@RequestBody CustomerProfile customerProfile) {
-		return customerProfileService.createAccount(customerProfile);
+	public void createNewAccount(@RequestBody CustomerProfile customerProfile) {
+		customerProfileService.createAccount(customerProfile);
 	}
-
-	// getAccountBalance GET
-
-	// DisplayAccountsORCustomers GET
 
 	@GetMapping(path = "/accountInfo/{id}")
 	public CustomerProfile getCustomerAccountProfile(@PathVariable("id") Integer accountId) {
 		return customerProfileService.getAccountdetailsById(accountId);
 	}
+	
+	@GetMapping(path = "/customerInfo/{id}")
+	public CustomerProfile getCustomerProfile(@PathVariable("id") Integer customerId) {
+		return customerProfileService.getCustomerdetailsById(customerId);
+	}
 
-	// TransferFunds POST
 	@PutMapping(path = "/transfer_funds", consumes = "application/json", produces = "application/json")
 	public TransactionResponse transferFunds(@RequestBody TransactionRequest transactionRequest) {
 		return TransactionService.transferFunds(transactionRequest);

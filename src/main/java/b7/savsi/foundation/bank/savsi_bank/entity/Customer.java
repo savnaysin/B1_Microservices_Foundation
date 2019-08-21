@@ -2,6 +2,7 @@ package b7.savsi.foundation.bank.savsi_bank.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
@@ -9,16 +10,13 @@ import javax.persistence.OneToOne;
 public class Customer {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer customerId;
 	private String name;
-	private String phone;	
-	
+	private String phone;
+
 	@OneToOne(mappedBy = "customer")
 	private Account account;
-	
-
-
 
 	public Customer() {
 		super();
@@ -48,7 +46,7 @@ public class Customer {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	
+
 	public Account getAccount() {
 		return account;
 	}
@@ -57,9 +55,8 @@ public class Customer {
 		this.account = account;
 	}
 
-	public Customer(Integer customerId, String name, String phone) {
+	public Customer(String name, String phone) {
 		super();
-		this.customerId = customerId;
 		this.name = name;
 		this.phone = phone;
 	}
