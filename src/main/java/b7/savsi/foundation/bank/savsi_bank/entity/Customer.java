@@ -1,15 +1,11 @@
 package b7.savsi.foundation.bank.savsi_bank.entity;
 
 import java.io.Serializable;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 
 @Entity
 public class Customer implements Serializable {
@@ -21,14 +17,10 @@ public class Customer implements Serializable {
 	private String name;
 	private String phone;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
-	private List<Account> accounts;
-
-	public Customer(String name, String phone, List<Account> accounts) {
+	public Customer(String name, String phone) {
 		super();
 		this.name = name;
 		this.phone = phone;
-		this.accounts = accounts;
 	}
 
 	public Customer() {
@@ -59,18 +51,16 @@ public class Customer implements Serializable {
 		this.phone = phone;
 	}
 
-	public List<Account> getAccounts() {
-		return accounts;
-	}
-
-	public void setAccounts(List<Account> accounts) {
-		this.accounts = accounts;
-	}
-
 	@Override
 	public String toString() {
-		return "Customer [customerId=" + customerId + ", name=" + name + ", phone=" + phone + ", accounts=" + accounts
-				+ "]";
+		return "Customer [customerId=" + customerId + ", name=" + name + ", phone=" + phone + "]";
+	}
+
+	public Customer(Integer customerId, String name, String phone) {
+		super();
+		this.customerId = customerId;
+		this.name = name;
+		this.phone = phone;
 	}
 
 }

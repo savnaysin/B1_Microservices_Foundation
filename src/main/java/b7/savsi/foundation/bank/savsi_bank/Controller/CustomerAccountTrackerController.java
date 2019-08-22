@@ -1,8 +1,5 @@
 package b7.savsi.foundation.bank.savsi_bank.Controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,19 +17,11 @@ import b7.savsi.foundation.bank.savsi_bank.entity.Customer;
 import b7.savsi.foundation.bank.savsi_bank.exception.NotFoundException;
 import b7.savsi.foundation.bank.savsi_bank.repository.AccountRepository;
 import b7.savsi.foundation.bank.savsi_bank.repository.CustomerRepository;
-import b7.savsi.foundation.bank.savsi_bank.service.CustomerProfileService;
-import b7.savsi.foundation.bank.savsi_bank.service.TransactionService;
 
 @RestController
 public class CustomerAccountTrackerController {
 	@Autowired
-	CustomerProfileService customerProfileService;
-	@Autowired
-	TransactionService TransactionService;
-
-	@Autowired
 	AccountRepository accountRepository;
-
 	@Autowired
 	CustomerRepository customerReposistory;
 
@@ -53,12 +42,17 @@ public class CustomerAccountTrackerController {
 		return ResponseEntity.ok().body(customer);
 	}
 
-	@PostMapping(path = "/createNewAccount", consumes = "application/json", produces = "application/json")
-	public Customer createNewAccount(@RequestBody CustomerProfile customerProfile) {
-		List<Account> accountList= new ArrayList<Account>();
-		accountList.add(new Account(customerProfile.getAccountType(),customerProfile.getAccountBalance()));
-		Customer newCustomer = new Customer(customerProfile.getCustomerName(),customerProfile.getCustomerPhone(),accountList);
+	@PostMapping(path = "/createNewCustomer", consumes = "application/json", produces = "application/json")
+	public Customer createNewCustomer(@RequestBody CustomerProfile customerProfile) {
+		Customer newCustomer = new Customer(customerProfile.getCustomerName(), customerProfile.getCustomerPhone());
 		return customerReposistory.save(newCustomer);
+	}
+	
+	@PostMapping(path = "/createNewAccount", consumes = "application/json", produces = "application/json")
+	public Account createNewAccount(@RequestBody CustomerProfile customerProfile) {
+		Customer newCustomer = new Customer(customerProfile.getCustomerName(), customerProfile.getCustomerPhone());
+		Account newAccount= new Account(customerProfile.getAccountType(), newCustomer, customerProfile.getAccountBalance());
+		return accountRepository.save(newAccount);
 	}
 
 	@PutMapping(path = "/transfer_funds", consumes = "application/json", produces = "application/json")
