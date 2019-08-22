@@ -1,26 +1,38 @@
 package b7.savsi.foundation.bank.savsi_bank.entity;
 
+import java.io.Serializable;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 
 @Entity
-public class Customer {
+public class Customer implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer customerId;
 	private String name;
 	private String phone;
 
-	@OneToOne(mappedBy = "customer")
-	private Account account;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+	private List<Account> accounts;
+
+	public Customer(String name, String phone, List<Account> accounts) {
+		super();
+		this.name = name;
+		this.phone = phone;
+		this.accounts = accounts;
+	}
 
 	public Customer() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Integer getCustomerId() {
@@ -47,23 +59,18 @@ public class Customer {
 		this.phone = phone;
 	}
 
-	public Account getAccount() {
-		return account;
+	public List<Account> getAccounts() {
+		return accounts;
 	}
 
-	public void setAccount(Account account) {
-		this.account = account;
-	}
-
-	public Customer(String name, String phone) {
-		super();
-		this.name = name;
-		this.phone = phone;
+	public void setAccounts(List<Account> accounts) {
+		this.accounts = accounts;
 	}
 
 	@Override
 	public String toString() {
-		return "Customer [customerId=" + customerId + ", name=" + name + ", phone=" + phone + "]";
+		return "Customer [customerId=" + customerId + ", name=" + name + ", phone=" + phone + ", accounts=" + accounts
+				+ "]";
 	}
 
 }

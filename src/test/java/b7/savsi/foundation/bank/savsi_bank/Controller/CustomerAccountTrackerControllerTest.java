@@ -6,19 +6,13 @@ import org.junit.Test;
 
 public class CustomerAccountTrackerControllerTest {
 
-	@Test
-	public void testCreateNewAccount() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetCustomerAccountProfile() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testTransferFunds() {
-		fail("Not yet implemented");
-	}
+	/*
+	 * @Test public void testCreateNewAccount() { fail("Not yet implemented"); }
+	 * 
+	 * @Test public void testGetCustomerAccountProfile() {
+	 * fail("Not yet implemented"); }
+	 * 
+	 * @Test public void testTransferFunds() { fail("Not yet implemented"); }
+	 */
 
 }

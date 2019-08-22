@@ -1,29 +1,31 @@
 package b7.savsi.foundation.bank.savsi_bank.entity;
 
-import javax.persistence.CascadeType;
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 @Entity
-public class Account {
+public class Account implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer accountID;
 	private String accountType;
 
-	@OneToOne(cascade = CascadeType.ALL, optional = false)
+	@ManyToOne
 	@JoinColumn(name = "customerId", referencedColumnName = "customerId")
 	private Customer customer;
 	private Long balance;
 
 	public Account() {
 		super();
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Integer getAccountID() {
@@ -58,10 +60,9 @@ public class Account {
 		this.customer = customer;
 	}
 
-	public Account(String accountType, Customer customer, Long balance) {
+	public Account(String accountType, Long balance) {
 		super();
 		this.accountType = accountType;
-		this.customer = customer;
 		this.balance = balance;
 	}
 
