@@ -1,5 +1,7 @@
 package b7.savsi.foundation.bank.savsi_bank.Controller;
 
+import java.net.URI;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import b7.savsi.foundation.bank.savsi_bank.bean.CustomerProfile;
 import b7.savsi.foundation.bank.savsi_bank.bean.TransactionRequest;
@@ -43,16 +46,29 @@ public class CustomerAccountTrackerController {
 	}
 
 	@PostMapping(path = "/createNewCustomer", consumes = "application/json", produces = "application/json")
-	public Customer createNewCustomer(@RequestBody CustomerProfile customerProfile) {
-		Customer newCustomer = new Customer(customerProfile.getCustomerName(), customerProfile.getCustomerPhone());
-		return customerReposistory.save(newCustomer);
+	public ResponseEntity<Void> createNewCustomer(@RequestBody CustomerProfile customerProfile) {
+		Customer newCustomerSaved = customerReposistory
+				.save(new Customer(customerProfile.getCustomerName(), customerProfile.getCustomerPhone()));
+
+		if (newCustomerSaved == null)
+			return ResponseEntity.noContent().build();
+
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().buildAndExpand(newCustomerSaved.getCustomerId())
+				.toUri();
+		return ResponseEntity.created(location).build();
 	}
-	
+
 	@PostMapping(path = "/createNewAccount", consumes = "application/json", produces = "application/json")
-	public Account createNewAccount(@RequestBody CustomerProfile customerProfile) {
+	public ResponseEntity<Void> createNewAccount(@RequestBody CustomerProfile customerProfile) {
 		Customer newCustomer = new Customer(customerProfile.getCustomerName(), customerProfile.getCustomerPhone());
-		Account newAccount= new Account(customerProfile.getAccountType(), newCustomer, customerProfile.getAccountBalance());
-		return accountRepository.save(newAccount);
+		Account newAccountSaved = accountRepository
+				.save(new Account(customerProfile.getAccountType(), newCustomer, customerProfile.getAccountBalance()));
+		if (newAccountSaved == null)
+			return ResponseEntity.noContent().build();
+
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().buildAndExpand(newAccountSaved.getAccountID())
+				.toUri();
+		return ResponseEntity.created(location).build();
 	}
 
 	@PutMapping(path = "/transfer_funds", consumes = "application/json", produces = "application/json")
