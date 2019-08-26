@@ -3,6 +3,7 @@ package b7.savsi.foundation.bank.savsi_bank.Controller;
 import java.util.Optional;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,51 +33,74 @@ import b7.savsi.foundation.bank.savsi_bank.repository.CustomerRepository;
 public class CustomerAccountTrackerControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
-	@MockBean
-	Account mockAccount;
-	@MockBean
-	Customer mockCustomer;
+
 	@MockBean
 	CustomerProfile customerProfile;
 	@MockBean
 	AccountRepository mockAccountRepository;
 	@MockBean
 	CustomerRepository mockCustomerReposistory;
+	@MockBean(name="customer1")
+	Customer mockCustomer1;
+	@MockBean(name="account1")
+	Account mockAccount1;
+	@MockBean(name="customer2")
+	Customer mockCustomer2;
+	@MockBean(name="account2")
+	Account mockAccount2;
+
+	@Before
+	public void setup() {
+		mockCustomer1 = new Customer(1002, "John", "6124236666");
+		mockAccount1 = new Account(1001, "current", mockCustomer1, (long) 2000);
+		mockCustomer2 = new Customer(1004, "Peter", "6124236667");
+		mockAccount2 = new Account(1003, "current", mockCustomer2, (long) 1000);
+	}
 
 	@Test
 	public void testGetAccountProfile() throws Exception {
-
-		mockCustomer = new Customer(1002, "savinay", "6124236666");
-		mockAccount = new Account(1001, "current", mockCustomer, (long) 1000);
-		Mockito.when(mockAccountRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(mockAccount));
+		Mockito.when(mockAccountRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(mockAccount1));
 		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/accountInfo/1001")
 				.accept(MediaType.APPLICATION_JSON);
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-		String expected = "{accountID: 1001,accountType: \"current\",balance: 1000}";
+		String expected = "{accountID: 1001,accountType: \"current\",balance: 2000}";
 
 		JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
 	}
 
 	@Test
 	public void testGetCustomerProfile() throws Exception {
-		mockCustomer = new Customer(1003, "savinay", "123");
-
-		Mockito.when(mockCustomerReposistory.findById(Mockito.anyInt())).thenReturn(Optional.of(mockCustomer));
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/customerInfo/1003")
+		Mockito.when(mockCustomerReposistory.findById(Mockito.anyInt())).thenReturn(Optional.of(mockCustomer1));
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/customerInfo/1002")
 				.accept(MediaType.APPLICATION_JSON);
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-		String expected = "{customerId: 1003,name:\"savinay\",phone: \"123\"}";
+		String expected = "{customerId: 1002,name:\"John\",phone: \"6124236666\"}";
 		JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
 	}
 
 	@Test
 	public void testCreateNewAccount() throws Exception {
-		mockCustomer = new Customer(1004, "John", "6124236667");
-		mockAccount = new Account(1005, "saving", mockCustomer, (long) 5000);
-		String customerProfileJson = "{1004,\"saving\",5000,1005,\"john\",\"6124236667\"}";
-		Mockito.when(mockAccountRepository.save(Mockito.any(Account.class))).thenReturn(mockAccount);
+		String customerProfileJson = "{\"accountType\": \"current\",\"accountBalance\": 2000,\"customerName\":\"John\",\"customerPhone\": \"6124236666\"}";
+		Mockito.when(mockAccountRepository.save(Mockito.any(Account.class))).thenReturn(mockAccount1);
 
-		// Send course as body to /students/Student1/courses
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/createNewAccount")
+				.accept(MediaType.APPLICATION_JSON).content(customerProfileJson)
+				.contentType(MediaType.APPLICATION_JSON);
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+		MockHttpServletResponse response = result.getResponse();
+		Assert.assertEquals("testCreateNewAccount:TC1", HttpStatus.CREATED.value(), response.getStatus());
+		Assert.assertEquals("testCreateNewAccount:TC2", "http://localhost/createNewAccount/1001",
+				response.getHeader(HttpHeaders.LOCATION));
+
+	}
+
+	@Test
+	public void testCreateNewCustomer() throws Exception {
+		String customerProfileJson = "{\"customerName\":\"John\",\"customerPhone\": \"6124236666\"}";
+		Mockito.when(mockCustomerReposistory.save(Mockito.any(Customer.class))).thenReturn(mockCustomer1);
+
 		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/createNewCustomer")
 				.accept(MediaType.APPLICATION_JSON).content(customerProfileJson)
 				.contentType(MediaType.APPLICATION_JSON);
@@ -84,15 +108,16 @@ public class CustomerAccountTrackerControllerTest {
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
 		MockHttpServletResponse response = result.getResponse();
-		Assert.assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-		Assert.assertEquals("http://localhost/createNewAccount/1", response.getHeader(HttpHeaders.LOCATION));
+		Assert.assertEquals("testCreateNewCustomer:TC1", HttpStatus.CREATED.value(), response.getStatus());
+		Assert.assertEquals("testCreateNewCustomer:TC2", "http://localhost/createNewCustomer/1002",
+				response.getHeader(HttpHeaders.LOCATION));
 
 	}
 
 	@Ignore
 	@Test
 	public void testTransferFunds() {
-
+		String customerProfileJson = "{\"customerName\":\"Peter\",\"customerPhone\": \"6124236668\"}";
 	}
 
 }

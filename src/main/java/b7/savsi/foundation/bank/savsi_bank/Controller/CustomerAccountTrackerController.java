@@ -53,7 +53,7 @@ public class CustomerAccountTrackerController {
 		if (newCustomerSaved == null)
 			return ResponseEntity.noContent().build();
 
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().buildAndExpand(newCustomerSaved.getCustomerId())
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newCustomerSaved.getCustomerId())
 				.toUri();
 		return ResponseEntity.created(location).build();
 	}
@@ -66,7 +66,7 @@ public class CustomerAccountTrackerController {
 		if (newAccountSaved == null)
 			return ResponseEntity.noContent().build();
 
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().buildAndExpand(newAccountSaved.getAccountID())
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newAccountSaved.getAccountID())
 				.toUri();
 		return ResponseEntity.created(location).build();
 	}
