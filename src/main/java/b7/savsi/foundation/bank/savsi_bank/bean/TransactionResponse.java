@@ -17,16 +17,6 @@ public class TransactionResponse implements Serializable {
 	private String transactionStatus;
 	private String message;
 
-	public TransactionResponse(Integer sourceAccountId, Integer destinationAccountId, Long sourceBalance,
-			Long destinationBalance, String transactionStatus, String message) {
-		super();
-		this.sourceAccountId = sourceAccountId;
-		this.destinationAccountId = destinationAccountId;
-		this.sourceBalance = sourceBalance;
-		this.destinationBalance = destinationBalance;
-		this.transactionStatus = transactionStatus;
-		this.message = message;
-	}
 
 	public TransactionResponse() {
 		super();

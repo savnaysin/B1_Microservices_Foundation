@@ -9,16 +9,6 @@ public class CustomerProfile {
 	private String customerName;
 	private String customerPhone;
 
-	public CustomerProfile(Integer accountID, String accountType, Long accountBalance, Integer customerId,
-			String customerName, String customerPhone) {
-		super();
-		this.accountID = accountID;
-		this.accountType = accountType;
-		this.accountBalance = accountBalance;
-		this.customerId = customerId;
-		this.customerName = customerName;
-		this.customerPhone = customerPhone;
-	}
 
 	public CustomerProfile() {
 		super();

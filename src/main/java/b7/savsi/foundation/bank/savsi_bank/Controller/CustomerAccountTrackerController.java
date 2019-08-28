@@ -99,9 +99,9 @@ public class CustomerAccountTrackerController {
 		if (sourceAccount != null && destinationAccount != null) {
 			destinationAccount.setBalance(destinationAccount.getBalance() + amount);
 			sourceAccount.setBalance(sourceAccount.getBalance() - amount);
-			System.out.println(accountRepository.save(sourceAccount).getBalance());
-			transactionResponse.setSourceBalance(accountRepository.save(sourceAccount).getBalance());
-			transactionResponse.setDestinationBalance(accountRepository.save(destinationAccount).getBalance());
+			//System.out.println(accountRepository.save(sourceAccount).getBalance());
+			//transactionResponse.setSourceBalance(accountRepository.save(sourceAccount).getBalance());
+			//transactionResponse.setDestinationBalance(accountRepository.save(destinationAccount).getBalance());
 			transactionResponse.setTransactionStatus("SUCCESS");
 			transactionResponse.setMessage("FUNDS TRANSFERRED");
 		}

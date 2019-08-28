@@ -1,5 +1,7 @@
 package b7.savsi.foundation.bank.savsi_bank.Controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -25,6 +27,7 @@ import b7.savsi.foundation.bank.savsi_bank.bean.CustomerProfile;
 import b7.savsi.foundation.bank.savsi_bank.bean.TransactionResponse;
 import b7.savsi.foundation.bank.savsi_bank.entity.Account;
 import b7.savsi.foundation.bank.savsi_bank.entity.Customer;
+import b7.savsi.foundation.bank.savsi_bank.exception.NotFoundException;
 import b7.savsi.foundation.bank.savsi_bank.repository.AccountRepository;
 import b7.savsi.foundation.bank.savsi_bank.repository.CustomerRepository;
 
@@ -60,7 +63,7 @@ public class CustomerAccountTrackerControllerTest {
 	}
 
 	@Test
-	public void testGetAccountProfile() throws Exception {
+	public void testGetAccountProfileSuccess() throws Exception {
 		Mockito.when(mockAccountRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(mockAccount1));
 		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/accountInfo/1001")
 				.accept(MediaType.APPLICATION_JSON);
@@ -68,6 +71,15 @@ public class CustomerAccountTrackerControllerTest {
 		String expected = "{accountID: 1001,accountType: \"current\",balance: 2000}";
 
 		JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
+	}
+
+	@Test(expected = NotFoundException.class)
+	public void testGetAccountProfileFailure() throws Exception {
+		// Mockito.when(mockAccountRepository.findById(Mockito.anyInt())).thenThrow(new
+		// NotFoundException("Account not found for id :: " + 1001));
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/accountInfo/1001")
+				.accept(MediaType.APPLICATION_JSON);
+		mockMvc.perform(requestBuilder).andExpect(status().isNotFound());
 	}
 
 	@Test
