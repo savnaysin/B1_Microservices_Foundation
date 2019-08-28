@@ -71,7 +71,7 @@ public class CustomerAccountTrackerController {
 		return ResponseEntity.created(location).build();
 	}
 
-	@PutMapping(path = "/transfer_funds", consumes = "application/json", produces = "application/json")
+	@PutMapping(path = "/transferFunds", consumes = "application/json", produces = "application/json")
 	public TransactionResponse transferFunds(@RequestBody TransactionRequest transactionRequest) {
 		Account sourceAccount = accountRepository.findById(transactionRequest.getWithdrawalAccountId()).orElse(null);
 		Account destinationAccount = accountRepository.findById(transactionRequest.getDepositAccountId()).orElse(null);

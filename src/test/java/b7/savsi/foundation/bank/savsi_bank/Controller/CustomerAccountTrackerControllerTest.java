@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -23,6 +22,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import b7.savsi.foundation.bank.savsi_bank.bean.CustomerProfile;
+import b7.savsi.foundation.bank.savsi_bank.bean.TransactionResponse;
 import b7.savsi.foundation.bank.savsi_bank.entity.Account;
 import b7.savsi.foundation.bank.savsi_bank.entity.Customer;
 import b7.savsi.foundation.bank.savsi_bank.repository.AccountRepository;
@@ -40,21 +40,23 @@ public class CustomerAccountTrackerControllerTest {
 	AccountRepository mockAccountRepository;
 	@MockBean
 	CustomerRepository mockCustomerReposistory;
-	@MockBean(name="customer1")
+	@MockBean(name = "customer1")
 	Customer mockCustomer1;
-	@MockBean(name="account1")
+	@MockBean(name = "account1")
 	Account mockAccount1;
-	@MockBean(name="customer2")
+	@MockBean(name = "customer2")
 	Customer mockCustomer2;
-	@MockBean(name="account2")
+	@MockBean(name = "account2")
 	Account mockAccount2;
+	@MockBean
+	TransactionResponse mockTransactionResponse;
 
 	@Before
 	public void setup() {
-		mockCustomer1 = new Customer(1002, "John", "6124236666");
+		mockCustomer1 = new Customer(101, "John", "6124236666");
 		mockAccount1 = new Account(1001, "current", mockCustomer1, (long) 2000);
-		mockCustomer2 = new Customer(1004, "Peter", "6124236667");
-		mockAccount2 = new Account(1003, "current", mockCustomer2, (long) 1000);
+		mockCustomer2 = new Customer(102, "Peter", "6124236667");
+		mockAccount2 = new Account(1002, "current", mockCustomer2, (long) 1000);
 	}
 
 	@Test
@@ -71,10 +73,10 @@ public class CustomerAccountTrackerControllerTest {
 	@Test
 	public void testGetCustomerProfile() throws Exception {
 		Mockito.when(mockCustomerReposistory.findById(Mockito.anyInt())).thenReturn(Optional.of(mockCustomer1));
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/customerInfo/1002")
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/customerInfo/101")
 				.accept(MediaType.APPLICATION_JSON);
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-		String expected = "{customerId: 1002,name:\"John\",phone: \"6124236666\"}";
+		String expected = "{customerId: 101,name:\"John\",phone: \"6124236666\"}";
 		JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
 	}
 
@@ -109,15 +111,28 @@ public class CustomerAccountTrackerControllerTest {
 
 		MockHttpServletResponse response = result.getResponse();
 		Assert.assertEquals("testCreateNewCustomer:TC1", HttpStatus.CREATED.value(), response.getStatus());
-		Assert.assertEquals("testCreateNewCustomer:TC2", "http://localhost/createNewCustomer/1002",
+		Assert.assertEquals("testCreateNewCustomer:TC2", "http://localhost/createNewCustomer/101",
 				response.getHeader(HttpHeaders.LOCATION));
 
 	}
 
-	@Ignore
 	@Test
-	public void testTransferFunds() {
-		String customerProfileJson = "{\"customerName\":\"Peter\",\"customerPhone\": \"6124236668\"}";
+	public void testTransferFunds() throws Exception {
+		String transactionRequestJson = "{\"withdrawalAccountId\": 1001,\"depositAccountId\": 1002,\"transactionamount\":200}";
+		String transactionResponseJson = "{\"sourceAccountId\": 1001,\"destinationAccountId\": 1002,\"transactionStatus\":\"SUCCESS\", \"message\":\"FUNDS TRANSFERRED\"}";
+		Mockito.when(mockAccountRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(mockAccount1));
+		Mockito.when(mockAccountRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(mockAccount2));
+
+		Mockito.doNothing().when(mockTransactionResponse).setSourceAccountId(mockAccount1.getAccountID());
+		Mockito.doNothing().when(mockTransactionResponse).setDestinationAccountId(mockAccount1.getAccountID());
+
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/transferFunds").accept(MediaType.APPLICATION_JSON)
+				.content(transactionRequestJson).contentType(MediaType.APPLICATION_JSON);
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+		JSONAssert.assertEquals(transactionResponseJson, result.getResponse().getContentAsString(), false);
+
 	}
 
 }

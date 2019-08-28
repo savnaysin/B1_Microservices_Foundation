@@ -30,7 +30,6 @@ public class TransactionResponse implements Serializable {
 
 	public TransactionResponse() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Integer getSourceAccountId() {

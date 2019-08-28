@@ -9,7 +9,6 @@ public class CustomerProfile {
 	private String customerName;
 	private String customerPhone;
 
-
 	public CustomerProfile(Integer accountID, String accountType, Long accountBalance, Integer customerId,
 			String customerName, String customerPhone) {
 		super();
@@ -23,7 +22,6 @@ public class CustomerProfile {
 
 	public CustomerProfile() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -81,5 +79,4 @@ public class CustomerProfile {
 		this.customerPhone = customerPhone;
 	}
 
-	
 }
