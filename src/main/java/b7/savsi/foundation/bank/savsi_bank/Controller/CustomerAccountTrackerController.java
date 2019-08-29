@@ -53,8 +53,8 @@ public class CustomerAccountTrackerController {
 		if (newCustomerSaved == null)
 			return ResponseEntity.noContent().build();
 
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newCustomerSaved.getCustomerId())
-				.toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(newCustomerSaved.getCustomerId()).toUri();
 		return ResponseEntity.created(location).build();
 	}
 
@@ -66,8 +66,8 @@ public class CustomerAccountTrackerController {
 		if (newAccountSaved == null)
 			return ResponseEntity.noContent().build();
 
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newAccountSaved.getAccountID())
-				.toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(newAccountSaved.getAccountID()).toUri();
 		return ResponseEntity.created(location).build();
 	}
 
@@ -99,9 +99,8 @@ public class CustomerAccountTrackerController {
 		if (sourceAccount != null && destinationAccount != null) {
 			destinationAccount.setBalance(destinationAccount.getBalance() + amount);
 			sourceAccount.setBalance(sourceAccount.getBalance() - amount);
-			//System.out.println(accountRepository.save(sourceAccount).getBalance());
-			//transactionResponse.setSourceBalance(accountRepository.save(sourceAccount).getBalance());
-			//transactionResponse.setDestinationBalance(accountRepository.save(destinationAccount).getBalance());
+			transactionResponse.setSourceBalance(accountRepository.save(sourceAccount).getBalance());
+			transactionResponse.setDestinationBalance(accountRepository.save(destinationAccount).getBalance());
 			transactionResponse.setTransactionStatus("SUCCESS");
 			transactionResponse.setMessage("FUNDS TRANSFERRED");
 		}
