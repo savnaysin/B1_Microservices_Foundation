@@ -81,19 +81,9 @@ public class CustomerAccountTrackerController {
 		TransactionResponse transactionResponse = new TransactionResponse();
 		transactionResponse.setSourceAccountId(sourceActId);
 		transactionResponse.setDestinationAccountId(destActId);
-		if (sourceAccount == null) {
+		if (sourceAccount == null || destinationAccount == null) {
 			transactionResponse.setTransactionStatus("FAILED");
-			transactionResponse.setMessage("SOURCE ACCOUNT NOT FOUND");
-			return transactionResponse;
-		}
-		if (destinationAccount == null) {
-			transactionResponse.setTransactionStatus("FAILED");
-			transactionResponse.setMessage("DESTINATION ACCOUNT NOT FOUND");
-			return transactionResponse;
-		}
-		if (sourceAccount != null && !((sourceAccount.getBalance() - amount) >= 0)) {
-			transactionResponse.setTransactionStatus("FAILED");
-			transactionResponse.setMessage("INSUFFICIENT FUNDS IN SOURCE ACCOUNT");
+			transactionResponse.setMessage("ACCOUNT NOT FOUND");
 			return transactionResponse;
 		}
 		if (sourceAccount != null && destinationAccount != null) {

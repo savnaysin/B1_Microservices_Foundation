@@ -38,11 +38,6 @@ public class TransactionRequest implements Serializable {
 		super();
 	}
 
-	public TransactionRequest(Integer withdrawalAccountId, Integer depositAccountId, Long transactionamount) {
-		super();
-		this.withdrawalAccountId = withdrawalAccountId;
-		this.depositAccountId = depositAccountId;
-		this.transactionamount = transactionamount;
-	}
+	
 
 }

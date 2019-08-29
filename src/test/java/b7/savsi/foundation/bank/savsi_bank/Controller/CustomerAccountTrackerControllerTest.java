@@ -187,9 +187,9 @@ public class CustomerAccountTrackerControllerTest {
 	}
 
 	@Test
-	public void testTransferSourceAccountNotFound() throws Exception {
+	public void testTransferAccountNotFound() throws Exception {
 		String transactionRequestJson = "{\"withdrawalAccountId\": 1001,\"depositAccountId\": 1002,\"transactionamount\":200}";
-		String transactionResponseJson = "{\"sourceAccountId\": 1001,\"destinationAccountId\": 1002,\"transactionStatus\":\"FAILED\", \"message\":\"SOURCE ACCOUNT NOT FOUND\"}";
+		String transactionResponseJson = "{\"sourceAccountId\": 1001,\"destinationAccountId\": 1002,\"transactionStatus\":\"FAILED\", \"message\":\"ACCOUNT NOT FOUND\"}";
 
 		RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/transferFunds").accept(MediaType.APPLICATION_JSON)
 				.content(transactionRequestJson).contentType(MediaType.APPLICATION_JSON);
@@ -200,27 +200,4 @@ public class CustomerAccountTrackerControllerTest {
 
 	}
 
-	@Test
-	public void testTransferDestinationAccountNotFound() throws Exception {
-		String transactionRequestJson = "{\"withdrawalAccountId\": 1001,\"depositAccountId\": 1002,\"transactionamount\":200}";
-		String transactionResponseJson = "{\"sourceAccountId\": 1001,\"destinationAccountId\": 1002,\"transactionStatus\":\"FAILED\", \"message\":\"DESTINATION ACCOUNT NOT FOUND\"}";
-
-		Mockito.when(mockAccountRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(mockAccount1));
-		Mockito.when(mockAccountRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(mockAccount2));
-		mockAccount2=null;
-		
-		Mockito.doNothing().when(mockTransactionResponse).setSourceAccountId(mockAccount1.getAccountID());
-		Mockito.doNothing().when(mockTransactionResponse).setDestinationAccountId(mockAccount1.getAccountID());
-		Mockito.when(mockAccountRepository.save(Mockito.any(Account.class))).thenReturn(mockAccount1);
-		Mockito.when(mockAccountRepository.save(Mockito.any(Account.class))).thenReturn(mockAccount2);
-		
-
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/transferFunds").accept(MediaType.APPLICATION_JSON)
-				.content(transactionRequestJson).contentType(MediaType.APPLICATION_JSON);
-
-		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-
-		JSONAssert.assertEquals(transactionResponseJson, result.getResponse().getContentAsString(), false);
-
-	}
 }
